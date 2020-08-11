@@ -24,7 +24,7 @@ function getData() {
 }
 function createDirectories(pathname) {
     const dirName = path.resolve();
-    pathname = pathname.replace(/^\.*\/|\/?[^\/]+\.[a-z]+|\/$/g, ''); // Remove leading directory markers, and remove ending /file-name.extension
+    pathname = pathname.replace(/^\.*\/|\/?[^\/]+\.[a-z]+|\/$/g, '');
     fs.mkdir(path.resolve(dirName, pathname), { recursive: true }, e => {
         if (e) {
             return console.log(e);
@@ -54,12 +54,12 @@ function activate(context) {
     let disposable = vscode.commands.registerCommand('extension.addPage', () => {
         // The code you place here will be executed every time your command is executed
         const wsedit = new vscode.WorkspaceEdit();
-        const asd = vscode.window.showInputBox().then((input) => {
+        const asd = vscode.window.showInputBox({ placeHolder: 'Enter page name' }).then((input) => {
             const folderPath = vscode.workspace.rootPath + '/src/pages/' + input;
             createDirectories(folderPath);
             createFiles(folderPath, 'index.svelte');
             vscode.workspace.applyEdit(wsedit);
-            vscode.window.showInformationMessage('Created new files');
+            vscode.window.showInformationMessage('New page created');
         });
     });
     context.subscriptions.push(disposable);
