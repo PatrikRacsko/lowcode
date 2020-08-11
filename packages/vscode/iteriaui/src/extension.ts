@@ -5,25 +5,20 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 function getData() : string {
-	
+	return `<script>
+	const endpoint = 'https://countries.trevorblades.com/'
+	const promise = fetch(endpoint).then(response => response.json())
+</script>
 
-
-	return '<script>\n' +
-	'\tconst fetchData = (async () => {\n' +
-	'\t\tconst response = await fetch(\'https://countries.trevorblades.com/\')\n' +
-	'    return await response.json()\n' +
-	'\t})()\n' +
-	'</script>\n'+
-  '\n'+
-  '{#await fetchData}\n'+
-  '\t<p>...waiting</p>\n'+
-  '{:then data}\n'+
-  '\t{#each data.__schema.types as type}\n'+
-  '\t <p>type.name</p>'+
-  '\t{/each}'+
-  '{:catch error}\n'+
-  '\t<p>An error occurred!</p>\n'+
-  '{/await}';
+{#await promise}
+	<p>...waiting</p>
+{:then data}
+	{#each data.__schema.types as type}
+	 <p>{type.name}</p>	
+	 {/each}
+{:catch error}
+	<p>An error occurred!</p>
+{/await}`;
 }
 
 
@@ -46,6 +41,8 @@ function createDirectories(pathname : any) {
 		console.log('Success');
 	});
  }
+
+ 
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
