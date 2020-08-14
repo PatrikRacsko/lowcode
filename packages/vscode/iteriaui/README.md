@@ -1,65 +1,37 @@
-# iteriaui README
+# JSON Tree Editor
 
-This is the README for your extension "iteriaui". After writing up a brief description, we recommend including the following sections.
+A vscode extension to preview and edit JSON documents in a simple tree view, based on <https://jsoneditoronline.org>.
+##
+To start open the command pallete and type `json`.
+`View>Command Palette> JSON Tree Editor: Start JSON editor session`
 
-## Features
+When a JSON file is opened in a standard vscode editor, you'll also find a `{}` icon in the right part of the editor's
+top title bar to directly open JSON Tree Editor.
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+You can also make a right click upon a JSON file in the tree explorer, where you'll find a
+**Start JSON Tree Editor session** item that will open both standard editor and JSON Tree Editor side by side.
 
-For example if there is an image subfolder under your extension project workspace:
+## Contributions
 
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- Tree view code provided by [jsoneditor](https://github.com/josdejong/jsoneditor)
+- Explorer context menu item and titlebar icon provided by [vertcitron](https://github.com/vertcitron)
+- Original project by [sunmorgus](https://github.com/sunmorgus/vscode-json-editor)
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 1.0.200602
+
+- Corrected some naming inconsistancies
 
 ### 1.0.0
 
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+- Forked from v.0.2.3 of VSCode JSON Editor by Sunmorgus
+- Added Explorer context menu item and titlebar icon (Issue #13 from original project)
+- Updated to the latest jsoneditor release (9.0.0 published on 05/24/2020)
+- Beautify CSS and JS files from JSON Editor Online files.
+- Extension will now detect the active theme type and match it. (Issue #6 and several others from original project)
+    - If theme type changes (light to dark, dark to light, high Contrast stays dark) a message asking you to
+        close and reopen the extension.
+- Changed from vscode-resource to Webview.asWebviewUri per Microsoft request (Issue #21 from original project)
+- Updated VS Code NPM Module allowing for better API compatability
+- Updated Readme, change log, etc.

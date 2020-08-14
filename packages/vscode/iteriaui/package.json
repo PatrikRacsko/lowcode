@@ -1,58 +1,93 @@
 {
-	"name": "iteriaui",
-	"displayName": "IteriaUI",
-	"description": "",
-	"version": "0.0.1",
-	"engines": {
-		"vscode": "^1.47.0"
-	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"onCommand:extension.addPage"
-	],
-	"main": "./out/extension.js",
-	"contributes": {
-		"commands": [
-			{
-				"command": "extension.addPage",
-				"title": "Add Page"
-			}
-		],
-		"menus": {
-			"explorer/context": [
-				{
-					"command": "extension.addPage",
-					"when": "explorerResourceIsFolder",
-					"group": "2_workspace"
-				}
-			]
-		}
-	},
-	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"lint": "eslint src --ext ts",
-		"watch": "tsc -watch -p ./",
-		"pretest": "npm run compile && npm run lint",
-		"test": "node ./out/test/runTest.js"
-	},
-	"devDependencies": {
-		"@types/glob": "^7.1.3",
-		"@types/mkdirp": "^1.0.1",
-		"@types/mocha": "^8.0.0",
-		"@types/node": "^14.0.27",
-		"@types/vscode": "^1.47.0",
-		"@typescript-eslint/eslint-plugin": "^3.8.0",
-		"@typescript-eslint/parser": "^3.8.0",
-		"eslint": "^7.6.0",
-		"glob": "^7.1.6",
-		"mocha": "^8.0.1",
-		"typescript": "^3.8.3",
-		"vscode-test": "^1.4.0"
-	},
-	"dependencies": {
-		"mkdirp": "^1.0.4"
-	}
+    "name": "vscode-json-editor",
+    "displayName": "JSON Tree Editor",
+    "description": "Generate a tree view editor of the active JSON document",
+    "version": "1.0.200602",
+    "publisher": "GregChamblin",
+    "engines": {
+        "vscode": "^1.32.0"
+    },
+    "icon": "resources/icon.png",
+    "categories": [
+        "Other"
+    ],
+    "homepage": "https://github.com/gregchamblin/vscode-json-editor",
+    "keywords": [
+        "json",
+        "editor",
+        "tree",
+        "preview"
+    ],
+    "activationEvents": [
+        "onLanguage:json",
+        "onCommand:vscode-json-editor.start"
+    ],
+    "main": "./out/src/extension",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/gregchamblin/vscode-json-editor.git"
+    },
+    "contributes": {
+        "commands": [{
+                "command": "vscode-json-editor.start5",
+                "title": "Start JSON Tree Editor session",
+                "category": "JSON Tree Editor",
+                "icon": {
+                    "light": "./resources/json-light.svg",
+                    "dark": "./resources/json-dark.svg"
+                }
+            },
+            {
+                "command": "vscode-json-editor.start",
+                "title": "Edit Page"
+            }
+        ],
+        "menus": {
+            "explorer/context": [{
+                "when": "resourceExtname == .json",
+                "command": "vscode-json-editor.start",
+                "group": "navigation"
+            }],
+            "editor/title": [{
+                "when": "editorLangId == json",
+                "command": "vscode-json-editor.start",
+                "group": "navigation"
+            }, {
+                "when": "editorLangId == svelte",
+                "command": "vscode-json-editor.start",
+                "group": "navigation"
+            }]
+        },
+        "configuration": {
+            "title": "JSON Tree Editor",
+            "properties": {
+                "vscode-json-editor.theme": {
+                    "type": "string",
+                    "default": "dark",
+                    "description": "Set the theme for the editor ('light', 'dark'). Note: you must close/reopen any existing editors for the change to take effect.",
+                    "enum": [
+                        "light",
+                        "dark"
+                    ]
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "deploy": "vsce publish --yarn"
+    },
+    "devDependencies": {
+        "@types/mocha": "^2.2.42",
+        "@types/node": "^7.0.43",
+        "aqua": "^1.0.1",
+        "tslint": "^5.8.0",
+        "tslint-microsoft-contrib": "^5.0.3",
+        "typescript": "^2.6.1",
+        "@types/vscode": "^1.32.0",
+        "vsce": "^1.75.0"
+    },
+    "dependencies": {}
 }
