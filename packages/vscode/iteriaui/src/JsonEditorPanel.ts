@@ -3,12 +3,14 @@
 import * as path from "path";
 import * as vscode from "vscode";
 import * as parse5 from "parse5";
+import * as fs from 'fs';
 
 //import { configurationSettings } from './globals/enums';
 
 export class JsonEditorPanel {
   public static currentPanel: JsonEditorPanel | undefined;
-
+  scriptTextSave : Array<any> = [];
+  scriptNodeSave : any = {};
   private static readonly viewType: string = "jsonEditor";
   //private static readonly extensionPrefix: string = 'vscode-json-editor';
 
@@ -52,7 +54,10 @@ export class JsonEditorPanel {
               this._currentEditor.document.getText().length
             )
           );
-          const html = parse5.serialize(JSON.parse(message.json));
+          let html = parse5.serialize(JSON.parse(message.json));
+          //TODO dynamicky: Match every script using regex, this will return an array
+          // cycle the matched array and paste the text between them (index based)
+          html = html.replace(/<script[^>]*>.*?<\/script>/g,'<script>'+this.scriptTextSave[0]+'</script>')
           editBuilder.replace(range, html);
         });
       }
@@ -105,31 +110,41 @@ export class JsonEditorPanel {
       }
     }
   }
+
   private filterNodes(documentFragment: any) {
-    let innerArray : any = [];
-    let outerArray : any = [];
-    documentFragment.childNodes.forEach((element: any) => {
-      if (element.childNodes && element.childNodes.length > 0) {
-        element.childNodes.forEach((element: any) => {
-          if (element.parentNode) {
-            delete element.parentNode;
-          }
-        });
-        //innerArray.push(element.childNodes);
-      }
-      if (element.parentNode) {
-        delete element.parentNode;
-      }
-       /*element[String(element.tagName)] = {
-        childNodes: innerArray
-      }
-      outerArray.push()
-      innerArray = []; */
-    });
+    const removeParentNode = (obj) => {
+      Object.keys(obj).forEach(key => 
+        (key === 'parentNode') && delete obj[key] || 
+        (obj[key] && typeof obj[key] === 'object') && removeParentNode(obj[key])
+        );
+        return obj;
+    }
     delete documentFragment.nodeName;
-    //console.log(documentFragment);
+    removeParentNode(documentFragment.childNodes);
+    this.scriptNodeSave = documentFragment.childNodes.filter(function( obj ) {
+      return obj.tagName === 'script';
+    });
+    this.scriptNodeSave.map(node => this.scriptTextSave.push(node.childNodes[0].value))
+    documentFragment.childNodes[0].childNodes[0].value = '';
+    //documentFragment.childNodes[0].childNodes
+    /*documentFragment.childNodes = documentFragment.childNodes.filter(function( obj ) {
+      return obj.tagName !== 'script';
+    }); */
+    //TODO need this to be dynamic
+    //const folderPath = vscode.workspace.rootPath+'/src/pages/';
+    //this.createFiles(folderPath, 'script.txt', JSON.stringify(this.scriptTextSave));
+    
     return documentFragment;
   }
+
+  private createFiles(path: any, fileName: string, data: any) {
+    fs.writeFile(path+'/'+fileName, data, err => {
+      if (err) {
+        return console.log(err);
+      }
+      console.log('Success');
+    });
+   }
 
   private getJson(): string {
     let json: string = "";
