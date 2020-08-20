@@ -4,6 +4,15 @@ import * as path from "path";
 import * as vscode from "vscode";
 import * as parse5 from "parse5";
 import * as fs from 'fs';
+import * as parser from 'prettier-plugin-svelte';
+import { formatAST } from 'prettier';
+
+
+
+
+
+//import { SupportLanguage, Parser, Printer } from 'prettier';
+
 
 //import { configurationSettings } from './globals/enums';
 
@@ -137,6 +146,25 @@ export class JsonEditorPanel {
     return documentFragment;
   }
 
+  private doFormat(input){
+  const folderPath = vscode.workspace.rootPath+'/src/pages/About/table.svelte';
+  let ast = parser.parsers.svelte.parse(input);
+  const locStart = parser.parsers.svelte.locStart;
+  const locEnd = parser.parsers.svelte.locEnd;
+  let options = {
+    "svelteSortOrder": "scripts-styles-markup",
+    "svelteStrictMode": true,
+    "svelteBracketNewLine": true,
+    "svelteAllowShorthand": false,
+    "originalText": input,
+    locStart,
+    locEnd
+}
+  let result = formatAST(ast, options);
+  console.log('Result po formatovani',result);
+  
+  }
+
   private createFiles(path: any, fileName: string, data: any) {
     fs.writeFile(path+'/'+fileName, data, err => {
       if (err) {
@@ -151,8 +179,9 @@ export class JsonEditorPanel {
     let documentFragment: any = "";
     if (this._currentEditor) {
       json = this._currentEditor.document.getText();
-      documentFragment = parse5.parseFragment(json);
-      json = this.filterNodes(documentFragment);
+      this.doFormat(json);
+      //documentFragment = parse5.parseFragment(json);
+      //json = this.filterNodes(documentFragment);
     }
     json = JSON.stringify(json);
     return json;
@@ -231,3 +260,4 @@ export class JsonEditorPanel {
         `;
   }
 }
+
